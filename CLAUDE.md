@@ -46,6 +46,56 @@ python simple_transcriber.py
 
 # Windows batch launcher
 run_transcriber.bat
+
+# Run API server
+python whisper_api.py
+```
+
+### Running the API Server
+```bash
+# Install API dependencies
+pip install -r requirements-api.txt
+
+# Set API key (required for authentication)
+export WHISPER_API_KEY=your_secret_key_here
+
+# Run the server
+python whisper_api.py
+# Or use uvicorn directly
+uvicorn whisper_api:app --host 0.0.0.0 --port 8000
+```
+
+The API server will start on `http://localhost:8000` and provides:
+- `POST /transcribe` - Upload audio file for transcription
+- `GET /models` - List available Whisper models
+- `GET /` - Health check endpoint
+
+#### API Usage Examples
+
+**Upload audio file with curl:**
+```bash
+curl -X POST "http://localhost:8000/transcribe" \
+  -H "X-API-Key: your_secret_key_here" \
+  -F "file=@audio.mp3" \
+  -F "model=base"
+```
+
+**JavaScript fetch example:**
+```javascript
+const formData = new FormData();
+formData.append('file', audioFile);
+formData.append('model', 'base');
+
+const response = await fetch('http://localhost:8000/transcribe', {
+  method: 'POST',
+  headers: {
+    'X-API-Key': 'your_secret_key_here'
+  },
+  body: formData
+});
+
+const result = await response.json();
+console.log(result.transcript);
 ```
 
 ### Building Executables
@@ -63,6 +113,23 @@ pyinstaller Simple_Transcriber_Fixed.spec
 ```
 
 Built executables are stored in `build/` directory.
+
+## Security
+
+### API Authentication
+The Whisper API server requires authentication via API key:
+
+- **Required**: Set `WHISPER_API_KEY` environment variable before starting the server
+- **Header**: Include `X-API-Key: your_secret_key_here` in all API requests
+- **Protected Endpoints**: `/transcribe` and `/models` require valid API key
+- **Health Check**: `/` endpoint is public and does not require authentication
+
+**Important**: The API key is mandatory - the server will reject requests without proper authentication.
+
+### CORS Configuration
+The API includes CORS middleware configured to allow cross-origin requests. For production use:
+- Replace `allow_origins=["*"]` with specific frontend origins
+- Review and restrict allowed methods/headers as needed
 
 ## Architecture
 
@@ -102,6 +169,12 @@ Built executables are stored in `build/` directory.
   - Single video processing only
   - Basic error handling
 
+- **whisper_api.py**:
+  - FastAPI REST API server for audio transcription
+  - Accepts uploaded audio files (mp3, wav, m4a, etc.)
+  - API key authentication support
+  - Returns JSON with transcript and language detection
+
 ## Core STT Logic Location
 
 The speech-to-text functionality has been extracted into a reusable module:
@@ -119,12 +192,16 @@ GUI implementations now use the extracted module:
 ## File Structure
 
 ```
-├── stt_utils.py                    # Reusable STT functionality (NEW)
-├── test_stt_utils.py              # Demo/test script for stt_utils (NEW)
+├── stt_utils.py                    # Reusable STT functionality
+├── test_stt_utils.py              # Demo/test script for stt_utils
+├── whisper_api.py                 # FastAPI REST API server (NEW)
+├── test_upload.py                 # API testing client (NEW)
 ├── youtube_transcriber.py          # Main application (batch processing)
 ├── faster_whisper_transcriber.py   # Faster Whisper GUI (refactored to use stt_utils)  
 ├── simple_transcriber.py           # Simple single-video version
-├── requirements.txt                # Python dependencies
+├── requirements.txt                # Python dependencies for GUI applications
+├── requirements-api.txt            # Python dependencies for API server (NEW)
+├── .env.example                   # Example environment variables (NEW)
 ├── run_transcriber.bat            # Windows launcher script
 ├── *.spec                         # PyInstaller build specifications
 ├── build/                         # Compiled executables
