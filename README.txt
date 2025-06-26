@@ -1,0 +1,1 @@
+Double-click the file, run_transcriber.bat, to start.
