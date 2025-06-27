@@ -29,7 +29,7 @@
 - **📊 Comprehensive Validation** - File size limits and format checking
 
 ### 🔧 Build & Deploy
-- **📦 Standalone Executables** - PyInstaller configurations for Windows/Linux/Mac
+- **📦 Standalone Executables** - PyInstaller configurations for Windows/Linux/macOS
 - **🚀 Easy Setup** - Virtual environment and dependency management
 - **📝 Comprehensive Docs** - CLAUDE.md with development guidance
 - **⚙️ Environment Config** - .env.example with security best practices
@@ -55,6 +55,9 @@
 
 ## 📚 Quick Start
 
+### Prerequisites
+Clone the repository and install dependencies (Python 3.8+, FFmpeg, `requirements.txt`) as described in [README.md](https://github.com/Keith-PAI/faster-whisper-transcriber#quick-start). Alternatively, download standalone executables from the release assets (Windows/Linux/macOS, FFmpeg required).
+
 ### GUI Application
 ```bash
 python faster_whisper_transcriber.py
@@ -64,7 +67,6 @@ python faster_whisper_transcriber.py
 ```bash
 # Set your API key
 export WHISPER_API_KEY=your_secret_key_here
-
 # Start the server
 python whisper_api.py
 ```
@@ -72,13 +74,14 @@ python whisper_api.py
 ### Library Integration
 ```python
 from stt_utils import transcribe_youtube_to_file
-
 transcript_file = transcribe_youtube_to_file(
     url="https://youtube.com/watch?v=...",
     output_dir=Path("./transcripts"),
     model_name="base"
 )
 ```
+
+**Note**: Download standalone executables from the release assets for a no-setup experience (FFmpeg required).
 
 ## 📋 What's Included
 - 3 GUI applications for different use cases
@@ -90,7 +93,7 @@ transcript_file = transcribe_youtube_to_file(
 
 ## 🎯 Use Cases
 - **Content Creators**: Transcribe videos for subtitles and accessibility
-- **Researchers**: Batch process interview recordings or lectures  
+- **Researchers**: Batch process interview recordings or lectures
 - **Developers**: Integrate STT capabilities into your applications
 - **Enterprises**: Deploy secure transcription APIs for internal tools
 
@@ -99,4 +102,4 @@ This is the initial release - no migration needed! The project is designed with 
 
 ---
 
-**Full Changelog**: https://github.com/username/youtube-transcriber/blob/main/CHANGELOG.md
+**Full Changelog**: https://github.com/Keith-PAI/faster-whisper-transcriber/blob/main/CHANGELOG.md
